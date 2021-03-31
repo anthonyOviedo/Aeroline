@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList; // import the ArrayList class
 
-
 /**
  *
  * @author Antony
@@ -25,11 +24,11 @@ public class Aerolinea {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
-        Plane plane = new Plane(1211,"ass",315);
+        // Plane plane = new Plane(1211,"ass",315);
         ServicePlane servicePlane = new ServicePlane();
         ArrayList<Plane> planes = new ArrayList<Plane>();
         try {
-            //servicePlane.insertPlane(plane);
+            // servicePlane.insertPlane(plane);
             planes = servicePlane.listPlanes();
         } catch (GlobalException ex) {
             Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
@@ -38,9 +37,6 @@ public class Aerolinea {
         }
         System.out.println(planes.get(0));
 
-    
     }
-   
+
 }
-
-
