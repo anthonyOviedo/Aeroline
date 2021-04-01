@@ -33,6 +33,9 @@ public class resourceAdmin {
         peers.remove(peer);
     }
 
+    private void processMessage(String msg){
+       
+    }
     
     @OnMessage
     public void onMessage(String message) {
