@@ -40,8 +40,8 @@ public class ServicePurchase extends Service{
             pstmt = conexion.prepareCall(INSERTPURCHASE);
 
             pstmt.setInt(1, purchase.getPurchase_id());
-            pstmt.setInt(2, purchase.getPurchase_user().getUser_id());
-            pstmt.setInt(3, purchase.getPurchase_ticket().getTicket_id());
+            pstmt.setInt(2, purchase.getPurchase_user());
+            pstmt.setInt(3, purchase.getPurchase_ticket());
             pstmt.setString(4, purchase.getPurchase_date());
             
             boolean resultado = pstmt.execute();
@@ -161,8 +161,8 @@ public class ServicePurchase extends Service{
             
      
             pstmt.setInt(1, purchase.getPurchase_id());
-            pstmt.setInt(2, purchase.getPurchase_user().getUser_id());
-            pstmt.setInt(3, purchase.getPurchase_ticket().getTicket_id());
+            pstmt.setInt(2, purchase.getPurchase_user());
+            pstmt.setInt(3, purchase.getPurchase_ticket());
             pstmt.setString(4, purchase.getPurchase_date());
             
 

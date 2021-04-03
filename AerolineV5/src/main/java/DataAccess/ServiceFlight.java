@@ -36,7 +36,7 @@ public class ServiceFlight extends Service {
             pstmt = conexion.prepareCall(INSERTFLIGHT);
 
             pstmt.setInt(1, flight.getFlight_id());
-            pstmt.setInt(2, flight.getFlight_plane().getPlane_id());
+            pstmt.setInt(2, flight.getFlight_plane());
             pstmt.setString(3, flight.getFlight_from());
             pstmt.setString(4, flight.getFlight_to());
             pstmt.setString(5, flight.getFlight_time());
@@ -73,7 +73,6 @@ public class ServiceFlight extends Service {
         }
         ResultSet rs = null;
         Flight flight = null;
-        Plane plane = null;
         ArrayList<Flight> coleccion = new ArrayList();
         CallableStatement pstmt = null;
         try {
@@ -85,7 +84,7 @@ public class ServiceFlight extends Service {
                 rs.getInt(2);
                 flight = new Flight(
                         rs.getInt(1),
-                        plane,
+                        rs.getInt(2),
                         rs.getString(3),
                         rs.getString(4),
                         rs.getString(5),
@@ -163,7 +162,7 @@ public class ServiceFlight extends Service {
             pstmt = conexion.prepareCall(UPDATEFLIGHT);
             
             pstmt.setInt(1, flight.getFlight_id());
-            pstmt.setInt(2, flight.getFlight_plane().getPlane_id());
+            pstmt.setInt(2, flight.getFlight_plane());
             pstmt.setString(3, flight.getFlight_from());
             pstmt.setString(4, flight.getFlight_to());
             pstmt.setString(5, flight.getFlight_time());

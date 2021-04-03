@@ -13,6 +13,13 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import Control.Admin;
+import DataAccess.GlobalException;
+import DataAccess.NoDataException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.sql.SQLException;
+import org.json.JSONArray;
 
 /**
  *
@@ -20,28 +27,27 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint("/resourceAdmin")
 public class resourceAdmin {
-    
+
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
-    
+
     @OnOpen
-    public void onOpen (Session peer) {
+    public void onOpen(Session peer) {
         peers.add(peer);
+        System.out.println("********************************************* Conectado");
     }
 
     @OnClose
-    public void onClose (Session peer) {
+    public void onClose(Session peer) {
         peers.remove(peer);
     }
 
-    private void processMessage(String msg){
-       
-    }
-    
     @OnMessage
-    public void onMessage(String message) {
+    public void onMessage(String message, Session session) throws JsonProcessingException, GlobalException, NoDataException, IOException, SQLException {
         for (Session peer : peers) {
             System.out.println(peer);
         }
-        System.out.println("@@@ msj :"+ message);
+        Admin admin = new Admin();
+        String DataResponse = admin.processRequest(message);
+        session.getBasicRemote().sendText(DataResponse);
     }
 }

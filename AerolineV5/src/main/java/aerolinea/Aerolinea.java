@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList; // import the ArrayList class
-
+import webSocketResource.resourceAdmin;
 /**
  *
  * @author Antony
@@ -36,6 +36,8 @@ public class Aerolinea {
             Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println(planes.get(0));
+        
+        System.out.println("test");
 
     }
 

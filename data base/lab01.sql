@@ -59,6 +59,7 @@ PROMPT=======================================
 CREATE TABLE lab01_User(
     user_id INT NOT NULL,
     user_name VARCHAR(10) NOT NULL,
+    user_nameuser VARCHAR(10) NOT NULL,
     user_password  VARCHAR(10) NOT NULL,
     user_type  VARCHAR(10) NOT NULL,
     user_lastnames VARCHAR(10)  NOT NULL,
@@ -112,11 +113,12 @@ CREATE OR replace PROCEDURE lab01_proc_ins_User
 (
   par_user_id NUMBER,
   par_user_name VARCHAR2,
+  par_user_nameus  VARCHAR2,
   par_user_pass VARCHAR2,
   par_user_type VARCHAR2, 
   par_user_ltname VARCHAR2,
   par_user_email VARCHAR2,
-  par_user_birthday VARCHAR2,
+  par_user_birthday date,
   par_user_add VARCHAR2,
   par_user_wkphone INT,
   par_user_perphone INT 
@@ -124,7 +126,8 @@ CREATE OR replace PROCEDURE lab01_proc_ins_User
 BEGIN
   INSERT INTO lab01_User (user_id,
   user_name,
-  user_passwORd,
+  user_nameuser,
+  user_password,
   user_type,
   user_lastnames,
   user_email,
@@ -135,6 +138,7 @@ BEGIN
   )
   VALUES(par_user_id,
     par_user_name,
+    par_user_nameus,
     par_user_pass,
     par_user_type, 
     par_user_ltname,
@@ -180,20 +184,22 @@ PROMPT=======================================
 CREATE OR REPLACE PROCEDURE lab01_proc_upd_user(
   par_user_id NUMBER,
   par_user_name VARCHAR2,
-  par_user_pass NUMBER,
+  par_user_nameus VARCHAR2,
+  par_user_pass VARCHAR2,
   par_user_type VARCHAR2, 
   par_user_ltname VARCHAR2,
   par_user_email VARCHAR2,
-  par_user_birthday VARCHAR2,
+  par_user_birthday date,
   par_user_add VARCHAR2,
-  par_user_wkphone VARCHAR2,
-  par_user_perphone VARCHAR2 
+  par_user_wkphone INT,
+  par_user_perphone INT      
 )IS
 BEGIN
   UPDATE lab01_User 
   SET
     user_name = par_user_name,
-    user_passwORd = par_user_pass,
+    user_nameuser = par_user_nameus,
+    user_password = par_user_pass,
     user_type = par_user_type,
     user_lastnames = par_user_ltname,
     user_email = par_user_email,
@@ -507,16 +513,31 @@ END;
 /
 show error
 
+-------------------------------------------------------------------------------------------------------
+--INSERTAR DATOS
+-------------------------------------------------------------------------------------------------------
 PROMPT=======================================
 PROMPT testing crud from lab01_plane ;
 PROMPT=======================================
+-- insert users
+--Admin / type 0
+EXEC lab01_proc_ins_User(1,'Carlos', 'admin1', '12345','0','Alvarado','cAlva@gmail.com','10/12/1994', 'Heredia',22222222,88888888)
+--users / type 1
+
+EXEC lab01_proc_ins_User(2, 'Elmer', 'cliente1', '6789','1','Jimenez','mjimenez@gmail.comm','1/04/1992','Alajuela',22222222,88887777)
+EXEC lab01_proc_ins_User(3, 'Azu', 'cliente2', '0123','1','Lopez','AzuL@gmail.com','1/12/1992', 'Heredia',22221222,55558888)
+
+EXEC lab01_proc_del_user(3);
+
+-- inserts plane
 EXEC lab01_proc_ins_plane(123,'el crucero volador',80);
 EXEC lab01_proc_ins_plane(122,'el crucero volador',81);
 EXEC lab01_proc_upd_plane(122, 'el crucero volador 2',69);
 EXEC lab01_proc_ins_plane(111,'el crucero volador',82);
 EXEC lab01_proc_del_plane(111);
 
-
+select * from lab01_user;
+COMMIT;
 select * from lab01_Plane;
 COMMIT;
 -- ..... ejecucion de stORe PROCEDUREs.

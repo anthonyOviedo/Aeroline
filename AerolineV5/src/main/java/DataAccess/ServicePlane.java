@@ -42,7 +42,7 @@ public class ServicePlane extends Service{
 
             pstmt.setInt(1, plane.getPlane_id());
             pstmt.setString(2, plane.getPlane_name());
-            pstmt.setInt(3, plane.getPlane_sits());
+            pstmt.setInt(3, plane.getPlane_seats());
             
             boolean resultado = pstmt.execute();
             if (resultado == true) {
@@ -160,7 +160,7 @@ public class ServicePlane extends Service{
             
             pstmt.setInt(1, plane.getPlane_id());
             pstmt.setString(2, plane.getPlane_name());
-            pstmt.setInt(3, plane.getPlane_sits());
+            pstmt.setInt(3, plane.getPlane_seats());
             
             pstmt.execute();
         } catch (SQLException e) {

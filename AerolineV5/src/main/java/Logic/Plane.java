@@ -5,64 +5,57 @@
  */
 package Logic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
+import javax.json.JsonObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  *
  * @author anton
  */
 public class Plane {
 
-    public Plane() {
-    }
-
-    /**
-     * @return the plane_id
-     */
     public int getPlane_id() {
         return plane_id;
     }
 
-    /**
-     * @param plane_id the plane_id to set
-     */
     public void setPlane_id(int plane_id) {
         this.plane_id = plane_id;
     }
 
-    /**
-     * @return the plane_name
-     */
     public String getPlane_name() {
         return plane_name;
     }
 
-    /**
-     * @param plane_name the plane_name to set
-     */
     public void setPlane_name(String plane_name) {
         this.plane_name = plane_name;
     }
 
-    /**
-     * @return the plane_sits
-     */
-    public int getPlane_sits() {
-        return plane_sits;
+    public int getPlane_seats() {
+        return plane_seats;
     }
 
-    /**
-     * @param plane_sits the plane_sits to set
-     */
-    public void setPlane_sits(int plane_sits) {
-        this.plane_sits = plane_sits;
+    public void setPlane_seats(int plane_seats) {
+        this.plane_seats = plane_seats;
     }
 
-    public Plane(int plane_id, String plane_name, int plane_sits) {
+    public Plane() {
+    }
+
+    public Plane(int plane_id, String plane_name, int plane_seats) {
         this.plane_id = plane_id;
         this.plane_name = plane_name;
-        this.plane_sits = plane_sits;
+        this.plane_seats = plane_seats;
     }
-    private int plane_id;
-    private String plane_name;
-    private int plane_sits;
-  
+
+    public int plane_id;
+    public String plane_name;
+    public int plane_seats;
+
 }

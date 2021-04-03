@@ -1,0 +1,16 @@
+Logic\User.class
+aerolinea\Aerolinea.class
+Control\Admin.class
+Logic\Plane.class
+Logic\Purchase.class
+DataAccess\GlobalException.class
+DataAccess\ServiceTicket.class
+DataAccess\Service.class
+webSocketResource\resourceAdmin.class
+DataAccess\ServicePlane.class
+Logic\Flight.class
+DataAccess\ServiceUser.class
+Logic\Ticket.class
+DataAccess\ServiceFlight.class
+DataAccess\NoDataException.class
+DataAccess\ServicePurchase.class

@@ -40,8 +40,8 @@ public class ServiceTicket extends Service {
             pstmt = conexion.prepareCall(INSERTTICKET);
 
             pstmt.setInt(1, ticket.getTicket_id());
-            pstmt.setInt(2, ticket.getTicket_flight().getFlight_id() );
-            pstmt.setInt(3, ticket.getTicket_user().getUser_id());
+            pstmt.setInt(2, ticket.getTicket_flight());
+            pstmt.setInt(3, ticket.getTicket_user());
             pstmt.setString(4, ticket.getTicket_duration_time());
             pstmt.setInt(5, ticket.getTicket_price());
             pstmt.setString(6, ticket.getTicket_seat());
@@ -86,14 +86,10 @@ public class ServiceTicket extends Service {
             rs = (ResultSet)pstmt.getObject(1);
             
             while (rs.next()) {
-                Flight flight = new Flight();
-                flight.setFlight_id(rs.getInt(2));
-                User user = new User();
-                user.setUser_id(rs.getInt(3));
                 Ticket ticket = new Ticket(
                         rs.getInt(1),
-                        flight,
-                        user,
+                        rs.getInt(2),
+                        rs.getInt(3),
                         rs.getString(4),
                         rs.getInt(5),
                         rs.getString(6)
@@ -170,8 +166,8 @@ public class ServiceTicket extends Service {
             pstmt = conexion.prepareCall(UPDATETICKET);
             
             pstmt.setInt(1, ticket.getTicket_id());
-            pstmt.setInt(2, ticket.getTicket_flight().getFlight_id() );
-            pstmt.setInt(3, ticket.getTicket_user().getUser_id());
+            pstmt.setInt(2, ticket.getTicket_flight());
+            pstmt.setInt(3, ticket.getTicket_user());
             pstmt.setString(4, ticket.getTicket_duration_time());
             pstmt.setInt(5, ticket.getTicket_price());
             pstmt.setString(6, ticket.getTicket_seat());
