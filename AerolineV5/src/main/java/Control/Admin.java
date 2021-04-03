@@ -65,20 +65,43 @@ public class Admin {
         return jsonString;
     }
 
+    public String deletePlane(String jsonPlane) throws JsonProcessingException, SQLException, GlobalException, NoDataException {
+        Gson gson = new Gson();
+        ServicePlane servicePlane = new ServicePlane();
+        Plane plane = gson.fromJson(jsonPlane, Plane.class);
+        servicePlane.deletePlane(plane);
+        return "Avion borrado";
+    }
+
+    private String updatePlane(String jsonPlane) throws GlobalException, NoDataException, SQLException {
+        Gson gson = new Gson();
+        ServicePlane servicePlane = new ServicePlane();
+        Plane plane = gson.fromJson(jsonPlane, Plane.class);
+        servicePlane.updatePlane(plane);
+        return "Avion actualizado";
+    }
+
     public String processRequest(String message) throws JsonProcessingException, SQLException, GlobalException, NoDataException {
         //switch mieo aqui 
         //mensajec con el formato {action = "listPlanes", object = [{},...] })
         Map<String, Object> result = new ObjectMapper().readValue(message, HashMap.class);
-        String action =(String)result.get("action");
-        
+        String action = (String) result.get("action");
+        Object obj = null;
         switch (action) {
             case "listPlanes":
                 return listPlanes();
 
             case "addNewPlane":
-                Object  obj = result.get("object");
-                System.out.println("Control.Admin.processRequest()");
+                obj = result.get("object");
                 return addNewPlane(obj.toString());
+
+            case "updatePlane":
+                obj = result.get("object");
+                return updatePlane(obj.toString());
+
+            case "deletePlane":
+                obj = result.get("object");
+                return deletePlane(obj.toString());
 
         }
         return "transaccion fallida";

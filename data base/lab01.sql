@@ -513,6 +513,22 @@ END;
 /
 show error
 
+PROMPT=======================================
+PROMPT FUNCTION search plane;
+PROMPT=======================================
+CREATE OR REPLACE FUNCTION  lab01_fun_search_plane (par_plane_id NUMBER)  RETURN SYS_REFCURSOR
+AS
+   VAR_REF SYS_REFCURSOR;
+BEGIN
+    OPEN VAR_REF FOR
+        SELECT *
+        FROM lab01_Plane where plane_id = par_plane_id ;
+
+    RETURN VAR_REF;
+END;
+/
+show error
+
 -------------------------------------------------------------------------------------------------------
 --INSERTAR DATOS
 -------------------------------------------------------------------------------------------------------
@@ -521,13 +537,13 @@ PROMPT testing crud from lab01_plane ;
 PROMPT=======================================
 -- insert users
 --Admin / type 0
-EXEC lab01_proc_ins_User(1,'Carlos', 'admin1', '12345','0','Alvarado','cAlva@gmail.com','10/12/1994', 'Heredia',22222222,88888888)
+--EXEC lab01_proc_ins_User(1,'Carlos', 'admin1', '12345','0','Alvarado','cAlva@gmail.com','10/12/1994', 'Heredia',22222222,88888888)
 --users / type 1
 
-EXEC lab01_proc_ins_User(2, 'Elmer', 'cliente1', '6789','1','Jimenez','mjimenez@gmail.comm','1/04/1992','Alajuela',22222222,88887777)
-EXEC lab01_proc_ins_User(3, 'Azu', 'cliente2', '0123','1','Lopez','AzuL@gmail.com','1/12/1992', 'Heredia',22221222,55558888)
+--EXEC lab01_proc_ins_User(2, 'Elmer', 'cliente1', '6789','1','Jimenez','mjimenez@gmail.comm','1/04/1992','Alajuela',22222222,88887777)
+--EXEC lab01_proc_ins_User(3, 'Azu', 'cliente2', '0123','1','Lopez','AzuL@gmail.com','1/12/1992', 'Heredia',22221222,55558888)
 
-EXEC lab01_proc_del_user(3);
+--EXEC lab01_proc_del_user(3);
 
 -- inserts plane
 EXEC lab01_proc_ins_plane(123,'el crucero volador',80);
