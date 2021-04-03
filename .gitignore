@@ -1,10 +1,15 @@
 /dist/
 /build/
 /nbproject/private/
-/target
+/target/
 *.class
 *.lst
 *.lib
 *.lst
 *.Ist
 *.war
+*inputFiles.lst.
+.classpath
+.project
+.settings/
+target/
