@@ -1,3 +1,9 @@
 /dist/
 /build/
 /nbproject/private/
+*.class
+*.lst
+*.lib
+*.lst
+*.Ist
+*.war
