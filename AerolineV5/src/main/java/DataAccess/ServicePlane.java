@@ -22,7 +22,7 @@ public class ServicePlane extends Service{
     private static final String INSERTPLANE = "{call lab01_proc_ins_plane(?,?,?)}";
     private static final String LISTPLANE = "{?=call lab01_fun_list_planes()}";
     private static final String DELETEPLANE = "{call lab01_proc_del_plane(?)}";
-    private static final String UPDATEPLANE = "{call lab01_proc_del_plane(?,?,?)}";
+    private static final String UPDATEPLANE = "{call lab01_proc_upd_plane(?,?,?)}";
     
     private static ServicePlane servicePlane = new ServicePlane();
     
