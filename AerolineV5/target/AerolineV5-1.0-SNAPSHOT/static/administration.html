@@ -23,74 +23,69 @@ and open the template in the editor.
 <body>
     <header>
         <section>
-            <label for="toggle-1" class="toggle-menu">
-                <ul>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
-            </label>
-            <input type="checkbox" id="toggle-1">
-            <h1>Welcome to the admin Portal</h1>
+            <h1>Bienvenido al portal de administracion</h1>
+
         </section>
     </header>
+    <div id=PlaneInterface style="display:none;">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div style="float: left;">
+                            <h1>Mantenimiento de Aviones</h1>
+                            <p>En el siguiente apartado podra agregar, borrar o editar aviones que esten dsiponibles
+                                para la
+                                aerolinea.</p>
 
-    <div class="container-fluid">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div style="float: left;">
-                        <h1>Mantenimiento de Aviones</h1>
-                        <p>En el siguiente apartado podra agregar, borrar o editar aviones que esten dsiponibles para la
-                            aerolinea.</p>
 
 
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <button type="button" class="btn btn-light" onclick="search()">Buscar</button>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                    <button type="button" class="btn btn-light" onclick="search()">Buscar</button>
+                                </div>
+                                <input type="text" class="form-control" placeholder="ID del Avion, example:12035485"
+                                    aria-label="Por ID" aria-describedby="basic-addon1">
                             </div>
-                            <input type="text" class="form-control" placeholder="ID del Avion, example:12035485"
-                                aria-label="Por ID" aria-describedby="basic-addon1">
+
                         </div>
-
                     </div>
-                </div>
 
-                <div class="col">
-                    <div id="planeForm">
-                        <h1>Agregar Avion</h1>
-                        <div>
-                            <!-- imputs para agregar el avion-->
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">ID</span>
-                                <input type="text" class="form-control" id="plane_id"
-                                    placeholder="Plane serial code or id" aria-label="Plane code"
-                                    aria-describedby="basic-addon1">
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">Name</span>
-                                <input type="text" class="form-control" id="plane_name" placeholder="Plane name"
-                                    aria-label="Plane name" aria-describedby="basic-addon1">
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">Seats</span>
-                                <input type="text" class="form-control" id="plane_seats"
-                                    placeholder="Plane amount of seats" aria-label="Plane seats"
-                                    aria-describedby="basic-addon1">
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <div class="col">
-                                    <button type="button" id='saveButton' class="btn btn-secondary"
-                                        onclick="cancelFrom()" style="float:left;">Cancelar</button>
+                    <div class="col">
+                        <div id="planeForm">
+                            <h1>Agregar Avion</h1>
+                            <div>
+                                <!-- imputs para agregar el avion-->
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">ID</span>
+                                    <input type="text" class="form-control" id="plane_id"
+                                        placeholder="Plane serial code or id" aria-label="Plane code"
+                                        aria-describedby="basic-addon1">
                                 </div>
 
-                                <div class="col">
-                                    <button type="button" id='saveButton' class="btn btn-success"
-                                        onclick="addNewPlane()" style="float:right;">Guardar</button>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Name</span>
+                                    <input type="text" class="form-control" id="plane_name" placeholder="Plane name"
+                                        aria-label="Plane name" aria-describedby="basic-addon1">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Seats</span>
+                                    <input type="text" class="form-control" id="plane_seats"
+                                        placeholder="Plane amount of seats" aria-label="Plane seats"
+                                        aria-describedby="basic-addon1">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="col">
+                                        <button type="button" id='saveButton' class="btn btn-secondary"
+                                            onclick="cancelFrom()" style="float:left;">Cancelar</button>
+                                    </div>
+
+                                    <div class="col">
+                                        <button type="button" id='saveButton' class="btn btn-success"
+                                            onclick="addNewPlane()" style="float:right;">Guardar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -98,26 +93,160 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
-    </div>
+
+
+        <div class="container-fluid">
+            <div class="container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Asientos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablePlane">
+                        <!-- aqui llace la tabla de aviones -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
     </div>
 
-    <div class="container-fluid">
-        <div class="container">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Asientos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tablePlane">
-                    <!-- aqui llace la tabla de aviones -->
-                </tbody>
-            </table>
+    <div id=FlightInterface>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-8">
+
+                        <h1>Mantenimiento de Vuelos</h1>
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">
+                                <button type="button" class="btn btn-light" onclick="searchFlight()">Buscar</button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="ID del Avion, example:12035485"
+                                aria-label="Por ID" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="container-fluid">
+                            <div class="container">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Avion</th>
+                                            <th>origen</th>
+                                            <th>destino</th>
+                                            <th>Salida</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableFlight">
+                                        <!-- aqui llace la tabla de Vuelos -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-4">
+                        <div id="planeForm">
+                            <h1>Agregar Vuelo</h1>
+                            <div>
+                                <!-- imputs para agregar el avion-->
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">ID</span>
+                                    <input type="text" class="form-control" id="flight_id"
+                                        placeholder="Flight code or id" aria-label="Flight Id"
+                                        aria-describedby="basic-addon1">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Avion</span>
+                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                        placeholder="Escriba el Id del Avion">
+                                    <datalist id="datalistOptions">
+                                        <option value="San Francisco">
+                                        <option value="New York">
+                                        <option value="Seattle">
+                                        <option value="Los Angeles">
+                                        <option value="Chicago">
+                                    </datalist>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Origen</span>
+                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                        placeholder="Escriba el Origen">
+                                    <datalist id="datalistOptions">
+                                        <option value="San Francisco">
+                                        <option value="New York">
+                                        <option value="Seattle">
+                                        <option value="Los Angeles">
+                                        <option value="Chicago">
+                                    </datalist>
+
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Destino</span>
+                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                        placeholder="Escriba el destino">
+                                    <datalist id="datalistOptions">
+                                        <option value="San Francisco">
+                                        <option value="New York">
+                                        <option value="Seattle">
+                                        <option value="Los Angeles">
+                                        <option value="Chicago">
+                                    </datalist>
+
+                                </div>
+
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Salida</span>
+                                    <input class="form-control" type="date" value="2011-08-19T13:45:00"
+                                        id="example-datetime-local-input">
+                                    <input class="form-control" type="time" value="13:45:00" id="example-time-input">
+                                </div>
+
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Precio</span>
+                                    <input type="text" class="form-control" id="flight_plane_id"
+                                        placeholder="Precio del tickete" aria-label="flight name"
+                                        aria-describedby="basic-addon1">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="col">
+                                        <button type="button" id='saveButton' class="btn btn-secondary"
+                                            onclick="cancelFrom()" style="float:left;">Cancelar</button>
+                                    </div>
+
+                                    <div class="col">
+                                        <button type="button" id='saveButton' class="btn btn-success"
+                                            onclick="addNewPlane()" style="float:right;">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+
+
+
     </div>
+
+
 
 
 </body>

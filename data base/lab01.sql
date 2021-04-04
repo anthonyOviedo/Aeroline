@@ -17,8 +17,21 @@ DROP TABLE lab01_Flight CASCADE CONSTRAINTS;
 DROP TABLE lab01_User CASCADE CONSTRAINTS;
 DROP TABLE lab01_Ticket CASCADE CONSTRAINTS;
 DROP TABLE lab01_Purchase CASCADE CONSTRAINTS;
+drop table lab01_Location CASCADE CONSTRAINTS;
 
 
+
+--loaction
+PROMPT=======================================
+PROMPT CREATE TABLE location;
+PROMPT=======================================
+CREATE TABLE lab01_Location(
+    id INT NOT NULL,
+    city_name VARCHAR2(25),
+    airport_name VARCHAR2(25),
+    country VARCHAR2(25),
+    PRIMARY KEY ( id )
+);
 
 --=======================================
 --creating TABLEs.
