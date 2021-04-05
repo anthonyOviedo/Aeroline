@@ -10,23 +10,19 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import DataAccess.Service;
-import java.sql.Types;
-import oracle.jdbc.OracleTypes;
 
 /**
  *
  * @author anton
  */
-public class ServicePlane extends Service{
+public class ServicePlane extends Service {
     private static final String INSERTPLANE = "{call lab01_proc_ins_plane(?,?,?)}";
     private static final String LISTPLANE = "{?=call lab01_fun_list_planes()}";
     private static final String DELETEPLANE = "{call lab01_proc_del_plane(?)}";
     private static final String UPDATEPLANE = "{call lab01_proc_upd_plane(?,?,?)}";
-    
+
     private static ServicePlane servicePlane = new ServicePlane();
-    
-        
+
     public void insertPlane(Plane plane) throws GlobalException, NoDataException {
         try {
             conectar();
@@ -43,7 +39,7 @@ public class ServicePlane extends Service{
             pstmt.setInt(1, plane.getPlane_id());
             pstmt.setString(2, plane.getPlane_name());
             pstmt.setInt(3, plane.getPlane_seats());
-            
+
             boolean resultado = pstmt.execute();
             if (resultado == true) {
                 throw new NoDataException("No se realizo la insercion");
@@ -74,20 +70,16 @@ public class ServicePlane extends Service{
             throw new NoDataException("La base de datos no se encuentra disponible");
         }
         ResultSet rs = null;
-       
+
         ArrayList<Plane> coleccion = new ArrayList();
         CallableStatement pstmt = null;
         try {
             pstmt = conexion.prepareCall(LISTPLANE);
-            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);	
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
             pstmt.execute();
-            rs = (ResultSet)pstmt.getObject(1);
+            rs = (ResultSet) pstmt.getObject(1);
             while (rs.next()) {
-                Plane plane = new Plane(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getInt(3)
-                );
+                Plane plane = new Plane(rs.getInt(1), rs.getString(2), rs.getInt(3));
                 coleccion.add(plane);
             }
         } catch (SQLException e) {
@@ -111,9 +103,9 @@ public class ServicePlane extends Service{
         }
         return coleccion;
     }
-    
+
     public void deletePlane(Plane plane) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -144,9 +136,9 @@ public class ServicePlane extends Service{
             }
         }
     }
-   
+
     public void updatePlane(Plane plane) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -157,11 +149,11 @@ public class ServicePlane extends Service{
         ResultSet rs = null;
         try {
             pstmt = conexion.prepareCall(UPDATEPLANE);
-            
+
             pstmt.setInt(1, plane.getPlane_id());
             pstmt.setString(2, plane.getPlane_name());
             pstmt.setInt(3, plane.getPlane_seats());
-            
+
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -180,6 +172,5 @@ public class ServicePlane extends Service{
             }
         }
     }
-        
 
 }

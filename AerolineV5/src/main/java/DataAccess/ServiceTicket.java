@@ -6,8 +6,6 @@
 package DataAccess;
 
 import Logic.Ticket;
-import Logic.Flight;
-import Logic.User;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,10 +20,9 @@ public class ServiceTicket extends Service {
     private static final String LISTTICKET = "{?=call lab01_fun_list_tickets()}";
     private static final String DELETETICKET = "{call lab01_proc_del_ticket(?)}";
     private static final String UPDATETICKET = "{call lab01_proc_del_ticket(?,?,?)}";
-    
+
     private static ServiceTicket serviceTicket = new ServiceTicket();
-    
-        
+
     public void insertTicket(Ticket ticket) throws GlobalException, NoDataException {
         try {
             conectar();
@@ -46,7 +43,6 @@ public class ServiceTicket extends Service {
             pstmt.setInt(5, ticket.getTicket_price());
             pstmt.setString(6, ticket.getTicket_seat());
 
-            
             boolean resultado = pstmt.execute();
             if (resultado == true) {
                 throw new NoDataException("No se realizo la insercion");
@@ -81,22 +77,16 @@ public class ServiceTicket extends Service {
         CallableStatement pstmt = null;
         try {
             pstmt = conexion.prepareCall(LISTTICKET);
-            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);	
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
             boolean a = pstmt.execute();
-            rs = (ResultSet)pstmt.getObject(1);
-            
+            rs = (ResultSet) pstmt.getObject(1);
+
             while (rs.next()) {
-                Ticket ticket = new Ticket(
-                        rs.getInt(1),
-                        rs.getInt(2),
-                        rs.getInt(3),
-                        rs.getString(4),
-                        rs.getInt(5),
-                        rs.getString(6)
-                );
+                Ticket ticket = new Ticket(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getInt(5),
+                        rs.getString(6));
                 coleccion.add(ticket);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new GlobalException("Sentencia no valida");
@@ -118,9 +108,9 @@ public class ServiceTicket extends Service {
         }
         return coleccion;
     }
-    
+
     public void deleteTicket(Ticket ticket) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -129,7 +119,7 @@ public class ServiceTicket extends Service {
         }
         CallableStatement pstmt = null;
         ResultSet rs = null;
-       
+
         try {
             pstmt = conexion.prepareCall(DELETETICKET);
             pstmt.setInt(1, ticket.getTicket_id());
@@ -151,9 +141,9 @@ public class ServiceTicket extends Service {
             }
         }
     }
-   
+
     public void updateTicket(Ticket ticket) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -164,7 +154,7 @@ public class ServiceTicket extends Service {
         ResultSet rs = null;
         try {
             pstmt = conexion.prepareCall(UPDATETICKET);
-            
+
             pstmt.setInt(1, ticket.getTicket_id());
             pstmt.setInt(2, ticket.getTicket_flight());
             pstmt.setInt(3, ticket.getTicket_user());
@@ -190,6 +180,5 @@ public class ServiceTicket extends Service {
             }
         }
     }
-        
-    
+
 }

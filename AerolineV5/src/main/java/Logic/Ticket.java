@@ -5,9 +5,6 @@
  */
 package Logic;
 
-import Logic.User;
-import Logic.Flight;
-
 /**
  *
  * @author anton
@@ -62,9 +59,11 @@ public class Ticket {
         this.ticket_seat = ticket_seat;
     }
 
-    public Ticket(){}
+    public Ticket() {
+    }
 
-    public Ticket(int ticket_id, int ticket_flight, int ticket_user, String ticket_duration_time, int ticket_price, String ticket_seat) {
+    public Ticket(int ticket_id, int ticket_flight, int ticket_user, String ticket_duration_time, int ticket_price,
+            String ticket_seat) {
         this.ticket_id = ticket_id;
         this.ticket_flight = ticket_flight;
         this.ticket_user = ticket_user;
@@ -72,12 +71,12 @@ public class Ticket {
         this.ticket_price = ticket_price;
         this.ticket_seat = ticket_seat;
     }
-    
-        public int ticket_id;
-        public int ticket_flight;
-        public int ticket_user;
-        public String ticket_duration_time;
-        public int ticket_price;
-        public String ticket_seat;
+
+    public int ticket_id;
+    public int ticket_flight;
+    public int ticket_user;
+    public String ticket_duration_time;
+    public int ticket_price;
+    public String ticket_seat;
 
 }

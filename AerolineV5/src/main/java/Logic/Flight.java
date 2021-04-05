@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Logic;
-import Logic.Plane;
+
 /**
  *
  * @author anton
@@ -12,19 +12,19 @@ import Logic.Plane;
 public class Flight {
 
     public int getFlight_id() {
-        return Flight_id;
+        return flight_id;
     }
 
-    public void setFlight_id(int Flight_id) {
-        this.Flight_id = Flight_id;
+    public void setFlight_id(int flight_id) {
+        this.flight_id = flight_id;
     }
 
     public int getFlight_plane() {
-        return Flight_plane;
+        return flight_plane_id;
     }
 
-    public void setFlight_plane(int Flight_plane) {
-        this.Flight_plane = Flight_plane;
+    public void setFlight_plane(int flight_plane_id) {
+        this.flight_plane_id = flight_plane_id;
     }
 
     public String getFlight_from() {
@@ -58,24 +58,23 @@ public class Flight {
     public void setFlight_price(int flight_price) {
         this.flight_price = flight_price;
     }
+    public int flight_id;
+    public int flight_plane_id;
+    public String flight_from;
+    public String flight_to;
+    public String flight_time;
+    public int flight_price;
 
-    public Flight() {
-    }
-
-    public Flight(int Flight_id, int Flight_plane, String flight_from, String flight_to, String flight_time, int flight_price) {
-        this.Flight_id = Flight_id;
-        this.Flight_plane = Flight_plane;
+    public Flight(int flight_id, int flight_plane_id, String flight_from, String flight_to, String flight_time, int flight_price) {
+        this.flight_id = flight_id;
+            this.flight_plane_id= flight_plane_id;
         this.flight_from = flight_from;
         this.flight_to = flight_to;
         this.flight_time = flight_time;
         this.flight_price = flight_price;
     }
- 
-    public int Flight_id;
-    public int Flight_plane;
-    public String flight_from;
-    public String flight_to;
-    public String flight_time;
-    public int flight_price;
-    
+
+    public Flight() {
+    }
+
 }

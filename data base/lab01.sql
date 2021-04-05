@@ -19,6 +19,8 @@ DROP TABLE lab01_Ticket CASCADE CONSTRAINTS;
 DROP TABLE lab01_Purchase CASCADE CONSTRAINTS;
 drop table lab01_Location CASCADE CONSTRAINTS;
 
+--date configuration
+ALTER SESSION SET NLS_DATE_FORMAT = "MM/DD/YYYY hh24:mi"; 
 
 
 --loaction
@@ -56,9 +58,9 @@ PROMPT=======================================
 CREATE TABLE lab01_Flight(
     flight_id INT NOT NULL,
     flight_plane_id  INT NULL,
-    flight_from  VARCHAR(10)  NOT NULL,
-    flight_to  VARCHAR(10)  NOT NULL,
-    flight_time  date  NOT NULL,
+    flight_from  VARCHAR(25)  NOT NULL,
+    flight_to  VARCHAR(25)  NOT NULL,
+    flight_time  VARCHAR(25)  NOT NULL,
     flight_price INT NOT NULL,
     FOREIGN KEY (flight_plane_id) REFERENCES lab01_Plane(plane_id),
     PRIMARY KEY ( flight_id )
@@ -216,7 +218,7 @@ BEGIN
     user_type = par_user_type,
     user_lastnames = par_user_ltname,
     user_email = par_user_email,
-    user_birthday = to_date(par_user_birthday,  'yyyy/mm/dd'),
+    user_birthday = to_date(par_user_birthday,  ' mm/dd/yyyy hh24:mm:'),
     user_address = par_user_add,
     user_workphone = par_user_wkphone,
     user_personalphone = par_user_perphone    
@@ -290,7 +292,7 @@ BEGIN
   SET
     purchase_user_id= par_purchase_user_id ,
     purchase_ticket_id=par_purchase_ticket_id,
-    purchase_date = to_date(purchase_date,  'yyyy/mm/dd hh24:mi')
+    purchase_date = to_date(purchase_date,  'mm/dd/yyyy hh24:mi')
   WHERE purchase_id = par_purchase_id;
 END;
 /
@@ -320,7 +322,7 @@ BEGIN
   VALUES(par_ticket_id,
     par_ticket_flight_code,
     par_ticket_user_id,
-    to_date(par_ticket_duration_time,  'yyyy/mm/dd hh24:mi'),
+    to_date(par_ticket_duration_time,  'mm/dd/yyyy hh24:mi'),
     par_ticket_price,
     par_ticket_seat);
 END lab01_proc_ins_ticket;
@@ -366,7 +368,7 @@ BEGIN
   SET
     ticket_flight_code= par_ticket_flight_code,
     ticket_user_id  =par_ticket_user_id, 
-    ticket_duration_time= to_date(par_ticket_duration_time,  'yyyy/mm/dd hh24:mi'),
+    ticket_duration_time= to_date(par_ticket_duration_time,  'mm/dd/yyyy hh24:mi'),
     ticket_price =par_ticket_price,
     ticket_seat = par_ticket_seat
   WHERE ticket_id = par_ticket_id;
@@ -400,7 +402,7 @@ BEGIN
     par_flight_plane_id,
     par_flight_from,
     par_flight_to,
-    to_date(par_flight_time, 'yyyy/mm/dd hh24:mi'),
+    par_flight_time,
     par_flight_price
     );
 END lab01_proc_ins_flight;
@@ -565,7 +567,13 @@ EXEC lab01_proc_upd_plane(122, 'el crucero volador 2',69);
 EXEC lab01_proc_ins_plane(111,'el crucero volador',82);
 EXEC lab01_proc_del_plane(111);
 
-select * from lab01_user;
+
+-- inserts Flight
+EXEC lab01_proc_ins_flight(123,123,'test_from', 'test_to','01/01/2021 23:20', 10);
+
+
+
+select * from lab01_Flight
 COMMIT;
 select * from lab01_Plane;
 COMMIT;

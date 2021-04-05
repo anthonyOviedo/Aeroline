@@ -19,7 +19,6 @@ import DataAccess.NoDataException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.sql.SQLException;
-import org.json.JSONArray;
 
 /**
  *
@@ -42,7 +41,8 @@ public class resourceAdmin {
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws JsonProcessingException, GlobalException, NoDataException, IOException, SQLException {
+    public void onMessage(String message, Session session)
+            throws JsonProcessingException, GlobalException, NoDataException, IOException, SQLException {
         for (Session peer : peers) {
             System.out.println(peer);
         }

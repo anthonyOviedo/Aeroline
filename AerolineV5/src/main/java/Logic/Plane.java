@@ -5,16 +5,6 @@
  */
 package Logic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import java.util.HashMap;
-import java.util.Map;
-import javax.json.JsonObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  *
  * @author anton

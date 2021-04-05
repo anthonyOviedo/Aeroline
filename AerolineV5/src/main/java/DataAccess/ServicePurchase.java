@@ -4,27 +4,27 @@
  * and open the template in the editor.
  */
 package DataAccess;
+
 import Logic.Flight;
-import Logic.Purchase;
 import Logic.Purchase;
 import Logic.User;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 /**
  *
  * @author anton
  */
-public class ServicePurchase extends Service{
-      private static final String INSERTPURCHASE = "{call lab01_proc_ins_purchase(?,?,?)}";
+public class ServicePurchase extends Service {
+    private static final String INSERTPURCHASE = "{call lab01_proc_ins_purchase(?,?,?)}";
     private static final String LISTPURCHASE = "{?=call lab01_fun_list_purchases()}";
     private static final String DELETEPURCHASE = "{call lab01_proc_del_purchase(?)}";
     private static final String UPDATEPURCHASE = "{call lab01_proc_del_purchase(?,?,?)}";
-    
+
     private static ServicePurchase servicePurchase = new ServicePurchase();
-    
-        
+
     public void insertPurchase(Purchase purchase) throws GlobalException, NoDataException {
         try {
             conectar();
@@ -36,14 +36,14 @@ public class ServicePurchase extends Service{
         CallableStatement pstmt = null;
 
         try {
-            
+
             pstmt = conexion.prepareCall(INSERTPURCHASE);
 
             pstmt.setInt(1, purchase.getPurchase_id());
             pstmt.setInt(2, purchase.getPurchase_user());
             pstmt.setInt(3, purchase.getPurchase_ticket());
             pstmt.setString(4, purchase.getPurchase_date());
-            
+
             boolean resultado = pstmt.execute();
             if (resultado == true) {
                 throw new NoDataException("No se realizo la insercion");
@@ -81,12 +81,12 @@ public class ServicePurchase extends Service{
         CallableStatement pstmt = null;
         try {
             pstmt = conexion.prepareCall(LISTPURCHASE);
-            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);	
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
             boolean a = pstmt.execute();
-            rs = (ResultSet)pstmt.getObject(1);
+            rs = (ResultSet) pstmt.getObject(1);
             while (rs.next()) {
                 purchase = new Purchase(
-                      
+
                 );
                 coleccion.add(purchase);
             }
@@ -111,9 +111,9 @@ public class ServicePurchase extends Service{
         }
         return coleccion;
     }
-    
+
     public void deletePurchase(int purchase_id) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -145,9 +145,9 @@ public class ServicePurchase extends Service{
             }
         }
     }
-   
+
     public void updatePurchase(Purchase purchase) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -158,13 +158,11 @@ public class ServicePurchase extends Service{
         ResultSet rs = null;
         try {
             pstmt = conexion.prepareCall(UPDATEPURCHASE);
-            
-     
+
             pstmt.setInt(1, purchase.getPurchase_id());
             pstmt.setInt(2, purchase.getPurchase_user());
             pstmt.setInt(3, purchase.getPurchase_ticket());
             pstmt.setString(4, purchase.getPurchase_date());
-            
 
             pstmt.execute();
         } catch (SQLException e) {

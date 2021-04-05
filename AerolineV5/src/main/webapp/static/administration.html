@@ -16,7 +16,7 @@ and open the template in the editor.
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="../js/Plane.js" type="text/javascript"></script>
+    <script src="../js/administration.js" type="text/javascript"></script>
     <link href="../inicio.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -27,7 +27,7 @@ and open the template in the editor.
 
         </section>
     </header>
-    <div id=PlaneInterface style="display:none;">
+    <div id=PlaneInterface>
         <div class="container-fluid">
             <div class="container">
                 <div class="row">
@@ -83,8 +83,11 @@ and open the template in the editor.
                                     </div>
 
                                     <div class="col">
-                                        <button type="button" id='saveButton' class="btn btn-success"
+                                        <button type="button" id='saveNewPlaneButton' class="btn btn-success"
                                             onclick="addNewPlane()" style="float:right;">Guardar</button>
+                                        <button type="button" id='savePlaneButton' class="btn btn-success"
+                                            onclick="updatePlane()" style="display:none;float:right;">Actualizar
+                                            Avion</button>
                                     </div>
                                 </div>
                             </div>
@@ -140,6 +143,8 @@ and open the template in the editor.
                                             <th>origen</th>
                                             <th>destino</th>
                                             <th>Salida</th>
+                                            <th>Precio</th>
+                                            <th>Accion</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableFlight">
@@ -165,22 +170,18 @@ and open the template in the editor.
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text" id="basic-addon1">Avion</span>
-                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                    <input class="form-control" list="datalistOptions1" id="flight_plane_id"
                                         placeholder="Escriba el Id del Avion">
-                                    <datalist id="datalistOptions">
-                                        <option value="San Francisco">
-                                        <option value="New York">
-                                        <option value="Seattle">
-                                        <option value="Los Angeles">
-                                        <option value="Chicago">
+                                    <datalist id="datalistOptions1">
+                                        <option value=123>123</option>
                                     </datalist>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text" id="basic-addon1">Origen</span>
-                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                    <input class="form-control" list="datalistOptions2" id="flight_from"
                                         placeholder="Escriba el Origen">
-                                    <datalist id="datalistOptions">
+                                    <datalist id="datalistOptions2">
                                         <option value="San Francisco">
                                         <option value="New York">
                                         <option value="Seattle">
@@ -192,9 +193,9 @@ and open the template in the editor.
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text" id="basic-addon1">Destino</span>
-                                    <input class="form-control" list="datalistOptions" id="exampleDataList"
+                                    <input class="form-control" list="datalistOptions3" id="flight_to"
                                         placeholder="Escriba el destino">
-                                    <datalist id="datalistOptions">
+                                    <datalist id="datalistOptions3">
                                         <option value="San Francisco">
                                         <option value="New York">
                                         <option value="Seattle">
@@ -207,28 +208,30 @@ and open the template in the editor.
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">Salida</span>
-                                    <input class="form-control" type="date" value="2011-08-19T13:45:00"
-                                        id="example-datetime-local-input">
-                                    <input class="form-control" type="time" value="13:45:00" id="example-time-input">
+                                    <input class="form-control" type="date" id="flight_date">
+                                    <input class="form-control" type="time" value="00:00" id="flight_time">
                                 </div>
 
 
                                 <div class="input-group mb-3">
                                     <span class="input-group-text" id="basic-addon1">Precio</span>
-                                    <input type="text" class="form-control" id="flight_plane_id"
+                                    <input type="text" class="form-control" id="flight_price"
                                         placeholder="Precio del tickete" aria-label="flight name"
                                         aria-describedby="basic-addon1">
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <div class="col">
-                                        <button type="button" id='saveButton' class="btn btn-secondary"
-                                            onclick="cancelFrom()" style="float:left;">Cancelar</button>
+                                        <button type="button" class="btn btn-secondary" onclick="cancelFromFlight()"
+                                            style="float:left;">Cancelar</button>
                                     </div>
 
                                     <div class="col">
-                                        <button type="button" id='saveButton' class="btn btn-success"
-                                            onclick="addNewPlane()" style="float:right;">Guardar</button>
+                                        <button type="button" id='saveNewFlightButton' class="btn btn-success"
+                                            onclick="addNewFlight()" style="float:right;">Guardar Nuevo Vuelo</button>
+                                        <button type="button" id='saveFlightButton' class="btn btn-success"
+                                            onclick="updateFlight()" style="display:none;float:right;">Actualizar
+                                            Vuelo</button>
                                     </div>
                                 </div>
                             </div>
