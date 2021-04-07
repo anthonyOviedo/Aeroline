@@ -20,6 +20,10 @@ public class ServicePlane extends Service {
     private static final String LISTPLANE = "{?=call lab01_fun_list_planes()}";
     private static final String DELETEPLANE = "{call lab01_proc_del_plane(?)}";
     private static final String UPDATEPLANE = "{call lab01_proc_upd_plane(?,?,?)}";
+    private static final String SEARCHPLANEID = "{?=call lab01_fun_srch_plane_by_id(?)}";
+    private static final String SEARCHPLANENAME = "{?=call lab01_fun_srch_plane_by_name(?)}";
+    
+    
 
     private static ServicePlane servicePlane = new ServicePlane();
 
@@ -171,6 +175,96 @@ public class ServicePlane extends Service {
                 throw new GlobalException("Estatutos invalidos o nulos");
             }
         }
+    }
+
+    public ArrayList<Plane> searchPlanesByName(String planeName) throws GlobalException, NoDataException, SQLException {
+        //necesario para el like de la base de datos
+        planeName = "%"+planeName+"%";
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        ResultSet rs = null;
+
+        ArrayList<Plane> coleccion = new ArrayList();
+        CallableStatement pstmt = null;
+        try {
+            pstmt = conexion.prepareCall(SEARCHPLANENAME);
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+            pstmt.setString(2, planeName);
+            pstmt.execute();
+            rs = (ResultSet) pstmt.getObject(1);
+            while (rs.next()) {
+                Plane plane = new Plane(rs.getInt(1), rs.getString(2), rs.getInt(3));
+                coleccion.add(plane);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Sentencia no valida");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        if (coleccion == null) {
+            throw new NoDataException("No hay datos");
+        }
+        return coleccion;
+    }
+
+     public ArrayList<Plane> searchPlanesByID(int planeId) throws GlobalException, NoDataException, SQLException {
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        ResultSet rs = null;
+
+        ArrayList<Plane> coleccion = new ArrayList();
+        CallableStatement pstmt = null;
+        try {
+            pstmt = conexion.prepareCall(SEARCHPLANEID);
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+            pstmt.setInt(2, planeId);
+            pstmt.execute();
+            rs = (ResultSet) pstmt.getObject(1);
+            while (rs.next()) {
+                Plane plane = new Plane(rs.getInt(1), rs.getString(2), rs.getInt(3));
+                coleccion.add(plane);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Sentencia no valida");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        if (coleccion == null) {
+            throw new NoDataException("No hay datos");
+        }
+        return coleccion;
     }
 
 }

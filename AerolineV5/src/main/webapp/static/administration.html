@@ -27,7 +27,9 @@ and open the template in the editor.
 
         </section>
     </header>
+
     <div id=PlaneInterface>
+
         <div class="container-fluid">
             <div class="container">
                 <div class="row">
@@ -39,13 +41,16 @@ and open the template in the editor.
                                 aerolinea.</p>
 
 
-
                             <div class="input-group mb-3">
-                                <div class="input-group-text">
-                                    <button type="button" class="btn btn-light" onclick="search()">Buscar</button>
-                                </div>
-                                <input type="text" class="form-control" placeholder="ID del Avion, example:12035485"
-                                    aria-label="Por ID" aria-describedby="basic-addon1">
+                                <select class="form-select" id="searchPlaneBy">
+                                    <option selected>Buscar por</option>
+                                    <option value="Name">Nombre</option>
+                                    <option value="Id">ID</option>
+                                </select>
+                                <input type="text" id="searchPlane" class="form-control"
+                                    aria-label="Text input with dropdown button">
+                                <button class="btn btn-outline-secondary" onclick="searchPlane()"
+                                    type="button">Buscar</button>
                             </div>
 
                         </div>
@@ -126,13 +131,18 @@ and open the template in the editor.
                     <div class="col-8">
 
                         <h1>Mantenimiento de Vuelos</h1>
+
                         <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <button type="button" class="btn btn-light" onclick="searchFlight()">Buscar</button>
-                            </div>
-                            <input type="text" class="form-control" placeholder="ID del Avion, example:12035485"
-                                aria-label="Por ID" aria-describedby="basic-addon1">
+                            <select class="form-select" id="searchFlightBy">
+                                <option selected>Buscar por</option>
+                                <option value="1">Nombre</option>
+                                <option value="2">ID</option>
+                            </select>
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                            <button class="btn btn-outline-secondary" onclick="searchFlight()"
+                                type="button">Buscar</button>
                         </div>
+
                         <div class="container-fluid">
                             <div class="container">
                                 <table class="table table-striped">

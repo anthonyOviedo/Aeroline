@@ -529,15 +529,32 @@ END;
 show error
 
 PROMPT=======================================
-PROMPT FUNCTION search plane;
+PROMPT FUNCTION search plane by id
 PROMPT=======================================
-CREATE OR REPLACE FUNCTION  lab01_fun_search_plane (par_plane_id NUMBER)  RETURN SYS_REFCURSOR
+CREATE OR REPLACE FUNCTION  lab01_fun_srch_plane_by_id(par_plane_id NUMBER)  RETURN SYS_REFCURSOR
 AS
    VAR_REF SYS_REFCURSOR;
 BEGIN
     OPEN VAR_REF FOR
         SELECT *
         FROM lab01_Plane where plane_id = par_plane_id ;
+
+    RETURN VAR_REF;
+END;
+/
+show error
+
+
+PROMPT=======================================
+PROMPT FUNCTION search plane by name
+PROMPT=======================================
+CREATE OR REPLACE FUNCTION  lab01_fun_srch_plane_by_name(par_plane_name VARCHAR2)  RETURN SYS_REFCURSOR
+AS
+   VAR_REF SYS_REFCURSOR;
+BEGIN
+    OPEN VAR_REF FOR
+        SELECT *
+        FROM lab01_Plane where plane_name like par_plane_name;
 
     RETURN VAR_REF;
 END;
@@ -562,10 +579,11 @@ PROMPT=======================================
 
 -- inserts plane
 EXEC lab01_proc_ins_plane(123,'el crucero volador',80);
-EXEC lab01_proc_ins_plane(122,'el crucero volador',81);
-EXEC lab01_proc_upd_plane(122, 'el crucero volador 2',69);
-EXEC lab01_proc_ins_plane(111,'el crucero volador',82);
-EXEC lab01_proc_del_plane(111);
+EXEC lab01_proc_ins_plane(122,'el caquero flotante',81);
+EXEC lab01_proc_ins_plane(124, 'el crucero volador 2',69);
+EXEC lab01_proc_ins_plane(111,'el michis',82);
+
+--select * from lab01_fun_srch_plane_by_id(111);
 
 
 -- inserts Flight
@@ -573,8 +591,7 @@ EXEC lab01_proc_ins_flight(123,123,'test_from', 'test_to','01/01/2021 23:20', 10
 
 
 
-select * from lab01_Flight
-COMMIT;
+--select * from lab01_Flight
 select * from lab01_Plane;
 COMMIT;
 -- ..... ejecucion de stORe PROCEDUREs.

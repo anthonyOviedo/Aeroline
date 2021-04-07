@@ -64,8 +64,61 @@ public class Admin {
             case "updateFlight":
                 obj = result.get("object");
                 return updateFlight(obj.toString());
+
+            case "searchPlanesById":
+                obj = result.get("object");
+                return searchPlanesByID(obj.toString());
+            
+            case "searchPlanesByName":
+                obj = result.get("object");
+                return searchPlanesByName(obj.toString());
         }
         return "transaccion fallida";
+    }
+
+    private String searchPlanesByID(String token) throws SQLException, JsonProcessingException {
+        ServicePlane servicePlane = new ServicePlane();
+        ArrayList<Plane> planes = new ArrayList<Plane>();
+        try {
+            planes = servicePlane.searchPlanesByID(Integer.parseInt(token));
+        } catch (GlobalException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoDataException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        JSONArray myArray = new JSONArray();
+        // Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        // Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(planes);
+        myArray.put(jsonString);
+        System.out.print(myArray);
+
+        return jsonString;
+    }
+ 
+    private String searchPlanesByName(String token) throws SQLException, JsonProcessingException {
+        ServicePlane servicePlane = new ServicePlane();
+        ArrayList<Plane> planes = new ArrayList<Plane>();
+        try {
+            // servicePlane.insertPlane(plane);
+            planes = servicePlane.searchPlanesByName(token);
+        } catch (GlobalException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoDataException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        JSONArray myArray = new JSONArray();
+        // Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        // Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(planes);
+        myArray.put(jsonString);
+        System.out.print(myArray);
+
+        return jsonString;
     }
 
     private String addNewPlane(String jsonPlane) throws JsonProcessingException, GlobalException, NoDataException {

@@ -2,6 +2,23 @@
 //Control for the Plane
 //*************************//
 
+function searchPlane() {
+    console.log("searching Plane");
+    let srchby = document.getElementById("searchPlaneBy").value;
+    let wsUri = "ws://localhost:8080/AerolineV5/" + "resourceAdmin";
+    let exampleSocket = new WebSocket(wsUri);
+    //falta hacer esto una promesa para cerrar el socket una vez que se termine el envio de datos
+    exampleSocket.onopen = function (event) {
+        exampleSocket.send(JSON.stringify({ action: "searchPlanesBy" + srchby, object: document.getElementById("searchPlane").value }));
+    };
+    exampleSocket.onmessage = function (event) {
+        var msg = JSON.parse(event.data);
+        cleanTable();
+        msg.forEach(e => printOnTable(e));
+    };
+
+}
+
 function updatePlane() {
     let plane = checkPlane();
     let wsUri = "ws://localhost:8080/AerolineV5/" + "resourceAdmin";
@@ -54,7 +71,7 @@ function checkPlane() {
     return plane;
 }
 
-function search() {
+function listPlanes() {
     let wsUri = "ws://localhost:8080/AerolineV5/" + "resourceAdmin";
     let exampleSocket = new WebSocket(wsUri);
     exampleSocket.onopen = function (event) {
@@ -130,6 +147,10 @@ function cancelFrom() {
 //*************************//
 //Control for the Flight
 //*************************//
+
+function searchFlight() {
+    console.log("searching flights");
+}
 
 function updateFlight() {
     let flight = checkFlight();
@@ -221,7 +242,7 @@ function printOnTableFlight(flight) {
 
 }
 
-function searchFlight() {
+function listFlights() {
     let wsUri = "ws://localhost:8080/AerolineV5/" + "resourceAdmin";
     let exampleSocket = new WebSocket(wsUri);
     exampleSocket.onopen = function (event) {
