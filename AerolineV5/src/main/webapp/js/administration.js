@@ -161,6 +161,8 @@ function updateFlight() {
         exampleSocket.send(JSON.stringify({ action: "updateFlight", object: flight }));
     };
     //exampleSocket.close();
+    cleanTableFlight();
+    listFlights();
 }
 
 function printFlightToEdit(flight_id) {
@@ -284,13 +286,17 @@ function addNewFlight() {
 
 function checkFlight() {
     //check that values are correct here 
-    let date = document.getElementById("flight_date").value + " " + document.getElementById("flight_time").value;
+    let date = document.getElementById("flight_date").value;
+    let time = document.getElementById("flight_time").value;
+    let Srclctn = (document.getElementById("flight_from").value);
+    let Deslctn = (document.getElementById("flight_to").value);
+
     let flight = {
         flight_id: parseInt(document.getElementById("flight_id").value),
         flight_plane_id: parseInt(document.getElementById("flight_plane_id").value),
-        flight_from: "'" + document.getElementById("flight_from").value + "'",
-        flight_to: "'" + document.getElementById("flight_to").value + "'",
-        flight_time: "'" + date + "'",
+        flight_from: "'" + Srclctn + "'",
+        flight_to: "'" + Deslctn + "'",
+        flight_time: "'" + date + " " + time + "'",
         flight_price: parseInt(document.getElementById("flight_price").value),
     };
     return flight;
@@ -312,3 +318,46 @@ function cancelFromFlight() {
 
     //cambiar el fondo tambien...
 }
+
+function printLocationOption(e) {
+    let completelocation = e.location_country + " " + e.location_airport_name;
+    let option = '<option value="' + e.location_id + " " + completelocation + '" >' + completelocation + '<option/> ';
+
+    document.getElementById("datalistSourceLocations").innerHTML += option;
+    document.getElementById("datalistDestLocations").innerHTML += option;
+}
+
+function loadOptions() {
+    let wsUri = "ws://localhost:8080/AerolineV5/" + "resourceAdmin";
+    let exampleSocket = new WebSocket(wsUri);
+    exampleSocket.onopen = function (event) {
+        exampleSocket.send(JSON.stringify({ action: "listLocations", object: "null" }));
+    };
+    exampleSocket.onmessage = function (event) {
+        let msg = JSON.parse(event.data);
+        msg.forEach(printLocationOption);
+    };
+
+    // exampleSocket.onopen = function (event) {
+    //     exampleSocket.send(JSON.stringify({ action: "listPlanes", object: "null" }));
+    // };
+    // exampleSocket.onmessage = function (event) {
+    //     let msg = JSON.parse(event.data);
+    //     msg.forEach(printLocationOption);
+    // };
+
+}
+
+function showAdminPlane() {
+    //canmbia los botones
+    document.getElementById("PlaneInterface").style.display = "block";
+    document.getElementById("FlightInterface").style.display = "none";
+}
+
+function showAdminFlight() {
+    //canmbia los botones
+    document.getElementById("PlaneInterface").style.display = "none";
+    document.getElementById("FlightInterface").style.display = "block";
+}
+
+loadOptions()

@@ -18,6 +18,7 @@ DROP TABLE lab01_User CASCADE CONSTRAINTS;
 DROP TABLE lab01_Ticket CASCADE CONSTRAINTS;
 DROP TABLE lab01_Purchase CASCADE CONSTRAINTS;
 drop table lab01_Location CASCADE CONSTRAINTS;
+DROP SEQUENCE ticket_id_seq;
 
 --date configuration
 ALTER SESSION SET NLS_DATE_FORMAT = "MM/DD/YYYY hh24:mi"; 
@@ -28,11 +29,11 @@ PROMPT=======================================
 PROMPT CREATE TABLE location;
 PROMPT=======================================
 CREATE TABLE lab01_Location(
-    id INT NOT NULL,
-    city_name VARCHAR2(25),
-    airport_name VARCHAR2(25),
-    country VARCHAR2(25),
-    PRIMARY KEY ( id )
+    location_id INT NOT NULL,
+    location_city_name VARCHAR2(25),
+    location_airport_name VARCHAR2(25),
+    location_country VARCHAR2(25),
+    PRIMARY KEY ( location_id )
 );
 
 --=======================================
@@ -58,9 +59,9 @@ PROMPT=======================================
 CREATE TABLE lab01_Flight(
     flight_id INT NOT NULL,
     flight_plane_id  INT NULL,
-    flight_from  VARCHAR(25)  NOT NULL,
-    flight_to  VARCHAR(25)  NOT NULL,
-    flight_time  VARCHAR(25)  NOT NULL,
+    flight_from  VARCHAR2(30)  NOT NULL,
+    flight_to VARCHAR2(30) NOT NULL,
+    flight_time  DATE NOT NULL,
     flight_price INT NOT NULL,
     FOREIGN KEY (flight_plane_id) REFERENCES lab01_Plane(plane_id),
     PRIMARY KEY ( flight_id )
@@ -73,17 +74,17 @@ PROMPT CREATE TABLE User;
 PROMPT=======================================
 CREATE TABLE lab01_User(
     user_id INT NOT NULL,
-    user_name VARCHAR(10) NOT NULL,
-    user_nameuser VARCHAR(10) NOT NULL,
-    user_password  VARCHAR(10) NOT NULL,
-    user_type  VARCHAR(10) NOT NULL,
-    user_lastnames VARCHAR(10)  NOT NULL,
-    user_email  VARCHAR(20)  NOT NULL,
-    user_birthday  DATE  NOT NULL,
-    user_address  VARCHAR(25)  NOT NULL,
-    user_workphone  INT NULL ,
-    user_personalphone INT NOT NULL,
-    PRIMARY KEY (user_id)
+    user_name VARCHAR(15) NOT NULL,
+    user_password  VARCHAR(20) NOT NULL,
+    user_type  VARCHAR(8) NOT NULL,
+    user_lastnames VARCHAR(40)  NOT NULL,
+    user_email  VARCHAR(30)  NOT NULL,
+    user_birthday  VARCHAR(10)  NOT NULL,
+    user_address  VARCHAR(45)  NOT NULL,
+    user_workphone  VARCHAR(25)   NULL ,
+    user_personalphone VARCHAR(25)   NULL,
+    PRIMARY KEY (user_id),
+    unique (user_email)
 );
 
 
@@ -93,16 +94,15 @@ PROMPT CREATE TABLE Ticket;
 PROMPT=======================================
 CREATE TABLE lab01_Ticket(
     ticket_id INT NOT NULL,
-    ticket_flight_code INT NULL,
+    ticket_flight_code INT NOT NULL,
+    ticket_flight_back_code INT NULL,
     ticket_user_id  INT  NOT NULL,
-    ticket_duration_time  DATE  NOT NULL,
+    ticket_duration_time  VARCHAR(10) NULL,
     ticket_price INT NOT NULL,
     ticket_seat VARCHAR(4) NULL,
-    FOREIGN KEY (ticket_flight_code) REFERENCES lab01_Flight(flight_id),
-    FOREIGN KEY (ticket_user_id) REFERENCES lab01_User(user_id),
     PRIMARY KEY (ticket_id )
 );
-
+CREATE SEQUENCE ticket_id_seq;
 
 --Purchase
 PROMPT=======================================
@@ -128,20 +128,18 @@ CREATE OR replace PROCEDURE lab01_proc_ins_User
 (
   par_user_id NUMBER,
   par_user_name VARCHAR2,
-  par_user_nameus  VARCHAR2,
   par_user_pass VARCHAR2,
   par_user_type VARCHAR2, 
   par_user_ltname VARCHAR2,
   par_user_email VARCHAR2,
-  par_user_birthday date,
+  par_user_birthday VARCHAR2,
   par_user_add VARCHAR2,
-  par_user_wkphone INT,
-  par_user_perphone INT 
+  par_user_wkphone VARCHAR2,
+  par_user_perphone VARCHAR2 
   ) IS
 BEGIN
-  INSERT INTO lab01_User (user_id,
+insert into lab01_User(user_id,
   user_name,
-  user_nameuser,
   user_password,
   user_type,
   user_lastnames,
@@ -149,11 +147,9 @@ BEGIN
   user_birthday,
   user_address,
   user_workphone,
-  user_personalphone
-  )
+  user_personalphone)
   VALUES(par_user_id,
     par_user_name,
-    par_user_nameus,
     par_user_pass,
     par_user_type, 
     par_user_ltname,
@@ -199,21 +195,19 @@ PROMPT=======================================
 CREATE OR REPLACE PROCEDURE lab01_proc_upd_user(
   par_user_id NUMBER,
   par_user_name VARCHAR2,
-  par_user_nameus VARCHAR2,
   par_user_pass VARCHAR2,
   par_user_type VARCHAR2, 
   par_user_ltname VARCHAR2,
   par_user_email VARCHAR2,
-  par_user_birthday date,
+  par_user_birthday VARCHAR2,
   par_user_add VARCHAR2,
-  par_user_wkphone INT,
-  par_user_perphone INT      
+  par_user_wkphone VARCHAR2,
+  par_user_perphone VARCHAR2      
 )IS
 BEGIN
   UPDATE lab01_User 
   SET
     user_name = par_user_name,
-    user_nameuser = par_user_nameus,
     user_password = par_user_pass,
     user_type = par_user_type,
     user_lastnames = par_user_ltname,
@@ -229,6 +223,22 @@ show error
 
 
 
+PROMPT=======================================
+PROMPT FUNCTION login User;
+PROMPT=======================================
+CREATE OR REPLACE FUNCTION  lab01_proc_login_user(par_user_email VARCHAR2, par_user_pass VARCHAR2)  
+RETURN SYS_REFCURSOR
+AS
+   VAR_REF SYS_REFCURSOR;
+BEGIN
+  OPEN VAR_REF FOR
+    SELECT *
+    FROM lab01_User
+    WHERE user_email = par_user_email and user_password = par_user_pass;
+  RETURN VAR_REF;
+END;
+/
+show error
 --=======================================
 --CRUD for PURCHASE table and others 
 --=======================================
@@ -306,8 +316,10 @@ PROMPT=======================================
 PROMPT PROCEDURE INSERT ticket;
 PROMPT=======================================
 CREATE OR replace PROCEDURE lab01_proc_ins_ticket
-(par_ticket_id NUMBER,
+(
+    par_ticket_id NUMBER,
     par_ticket_flight_code NUMBER,
+    par_ticket_flight_back_code NUMBER,
     par_ticket_user_id NUMBER,
     par_ticket_duration_time VARCHAR2,
     par_ticket_price NUMBER,
@@ -316,13 +328,16 @@ BEGIN
   INSERT INTO lab01_ticket (
     ticket_id,
     ticket_flight_code,
+    ticket_flight_back_code,
     ticket_user_id,
     ticket_duration_time,
-    ticket_price, ticket_seat )
-  VALUES(par_ticket_id,
+    ticket_price, 
+    ticket_seat )
+  VALUES(ticket_id_seq.nextval,
     par_ticket_flight_code,
+    par_ticket_flight_back_code,
     par_ticket_user_id,
-    to_date(par_ticket_duration_time,  'mm/dd/yyyy hh24:mi'),
+    par_ticket_duration_time,
     par_ticket_price,
     par_ticket_seat);
 END lab01_proc_ins_ticket;
@@ -402,7 +417,7 @@ BEGIN
     par_flight_plane_id,
     par_flight_from,
     par_flight_to,
-    par_flight_time,
+    (TO_DATE(par_flight_time, 'YYYYMMDD HH24:MI')),
     par_flight_price
     );
 END lab01_proc_ins_flight;
@@ -425,7 +440,7 @@ END;
 show error
 
 PROMPT=======================================
-PROMPT FUNCTION DELETE flight;
+PROMPT PROCEDURE DELETE flight;
 PROMPT=======================================
 CREATE OR REPLACE PROCEDURE lab01_proc_del_flight(par_flight_id INT) AS
 BEGIN
@@ -436,7 +451,7 @@ show error
 
 
 PROMPT=======================================
-PROMPT FUNCTION UPDATE flight;
+PROMPT PROCEDURE UPDATE flight;
 PROMPT=======================================
 CREATE OR REPLACE PROCEDURE lab01_proc_upd_flight(
   par_flight_id NUMBER,
@@ -452,13 +467,30 @@ BEGIN
     flight_plane_id = par_flight_plane_id,
     flight_from = par_flight_from,
     flight_to = par_flight_to,
-    flight_time = par_flight_time,
+    flight_time = (TO_DATE(par_flight_time, 'YYYYMMDD HH24:MI')),
     flight_price = par_flight_price
   WHERE flight_id = par_flight_id;
 END;
 /
 show error
 
+
+PROMPT=======================================
+PROMPT FUNCTION search Flights 
+PROMPT=======================================
+CREATE OR REPLACE FUNCTION  lab01_fun_get_flights(par_flight_from VARCHAR2, par_flight_to VARCHAR2, par_flight_time VARCHAR)  
+RETURN SYS_REFCURSOR
+AS
+   VAR_REF SYS_REFCURSOR;
+BEGIN
+    OPEN VAR_REF FOR
+        SELECT *
+        FROM lab01_Flight where flight_from like par_flight_from and
+        flight_to like par_flight_to;
+    RETURN VAR_REF;
+END;
+/
+show error
 
 --=======================================
 --CRUD for PLANE table and others 
@@ -561,6 +593,24 @@ END;
 /
 show error
 
+
+PROMPT=======================================
+PROMPT FUNCTION LIST Location;
+PROMPT=======================================
+CREATE OR REPLACE FUNCTION  lab01_fun_list_locations RETURN SYS_REFCURSOR
+AS
+   VAR_REF SYS_REFCURSOR;
+BEGIN
+    OPEN VAR_REF FOR
+        SELECT *
+        FROM lab01_Location;
+
+    RETURN VAR_REF;
+END;
+/
+show error
+
+
 -------------------------------------------------------------------------------------------------------
 --INSERTAR DATOS
 -------------------------------------------------------------------------------------------------------
@@ -583,16 +633,33 @@ EXEC lab01_proc_ins_plane(122,'el caquero flotante',81);
 EXEC lab01_proc_ins_plane(124, 'el crucero volador 2',69);
 EXEC lab01_proc_ins_plane(111,'el michis',82);
 
---select * from lab01_fun_srch_plane_by_id(111);
-
 
 -- inserts Flight
-EXEC lab01_proc_ins_flight(123,123,'test_from', 'test_to','01/01/2021 23:20', 10);
+EXEC lab01_proc_ins_flight(123,123,'test_from', 'test_to','20211203  2320', 10);
+
+insert into lab01_Flight(flight_id,flight_plane_id,flight_from,flight_to,flight_time, flight_price)
+values (1123,123,'test_from', 'test_to',to_date('20211203  2320', 'YYYYMMDD HH24:MI'), 10);
+
+insert into lab01_User(user_id,
+  user_name,
+  user_password,
+  user_type,
+  user_lastnames,
+  user_email,
+  user_birthday,
+  user_address,
+  user_workphone,
+  user_personalphone
+  ) values(1111,'tony', 'pass123','admin' ,'oviedo', 'a@a.com', '01012020', 'malaga1 casa93', '50687898967','50687898967');
+
+EXEC lab01_proc_ins_User(1142,'tony', 'pass123','client' ,'oviedo', 'c@c.com', '01012020', 'malaga1 casa93', '50687898967','50687898967');
 
 
+commit;
 
---select * from lab01_Flight
-select * from lab01_Plane;
-COMMIT;
+SELECT * from lab01_Flight;
+SELECT * from lab01_User;
+commit;
+
 -- ..... ejecucion de stORe PROCEDUREs.
 --show user

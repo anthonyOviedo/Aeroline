@@ -5,6 +5,13 @@
  */
 package webSocketResource;
 
+import Control.Admin;
+import Control.Login;
+import DataAccess.GlobalException;
+import DataAccess.NoDataException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,19 +20,13 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import Control.Admin;
-import DataAccess.GlobalException;
-import DataAccess.NoDataException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  *
  * @author anton
  */
-@ServerEndpoint("/resourceAdmin")
-public class resourceAdmin {
+@ServerEndpoint("/resourceLogin")
+public class resourceLogin {
 
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 
@@ -46,10 +47,11 @@ public class resourceAdmin {
         for (Session peer : peers) {
             System.out.println(peer);
         }
-        Admin admin = new Admin();
-        String DataResponse = admin.processRequest(message);
+        Login login = new Login();
+        String DataResponse = login.processRequest(message);
         session.getBasicRemote().sendText(DataResponse);
         //experimento
         onClose(session);
     }
+
 }

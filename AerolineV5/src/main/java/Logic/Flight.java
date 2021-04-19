@@ -19,11 +19,11 @@ public class Flight {
         this.flight_id = flight_id;
     }
 
-    public int getFlight_plane() {
+    public int getFlight_plane_id() {
         return flight_plane_id;
     }
 
-    public void setFlight_plane(int flight_plane_id) {
+    public void setFlight_plane_id(int flight_plane_id) {
         this.flight_plane_id = flight_plane_id;
     }
 
@@ -58,16 +58,10 @@ public class Flight {
     public void setFlight_price(int flight_price) {
         this.flight_price = flight_price;
     }
-    public int flight_id;
-    public int flight_plane_id;
-    public String flight_from;
-    public String flight_to;
-    public String flight_time;
-    public int flight_price;
 
     public Flight(int flight_id, int flight_plane_id, String flight_from, String flight_to, String flight_time, int flight_price) {
         this.flight_id = flight_id;
-            this.flight_plane_id= flight_plane_id;
+        this.flight_plane_id = flight_plane_id;
         this.flight_from = flight_from;
         this.flight_to = flight_to;
         this.flight_time = flight_time;
@@ -76,5 +70,12 @@ public class Flight {
 
     public Flight() {
     }
+
+    public int flight_id;
+    public int flight_plane_id;
+    public String flight_from;
+    public String flight_to;
+    public String flight_time;
+    public int flight_price;
 
 }

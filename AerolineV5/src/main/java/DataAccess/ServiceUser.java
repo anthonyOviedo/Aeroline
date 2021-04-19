@@ -16,14 +16,14 @@ import java.util.ArrayList;
  * @author anton
  */
 public class ServiceUser extends Service {
-    
-    private static final String INSERTUSER = "{call lab01_proc_ins_user(?,?,?)}";
+
+    private static final String INSERTUSER = "{call lab01_proc_ins_user(?,?,?,?,?,?,?,?,?,?)}";
     private static final String LISTUSER = "{?=call lab01_fun_list_users()}";
     private static final String DELETEUSER = "{call lab01_proc_del_user(?)}";
     private static final String UPDATEUSER = "{call lab01_proc_del_user(?,?,?)}";
-    
+    private static final String LOGINUSER = "{?=call lab01_proc_login_user(?,?)}";
+
     private static ServiceUser serviceUser = new ServiceUser();
-    
         
     public void insertUser(User user) throws GlobalException, NoDataException {
         try {
@@ -46,8 +46,8 @@ public class ServiceUser extends Service {
             pstmt.setString(6, user.getUser_email());
             pstmt.setString(7, user.getUser_birthday());
             pstmt.setString(8, user.getUser_address());
-            pstmt.setInt(9, user.getUser_workphone());
-            pstmt.setInt(10, user.getUser_personalphone());          
+            pstmt.setString(9, user.getUser_workphone());
+            pstmt.setString(10, user.getUser_personalphone());
             boolean resultado = pstmt.execute();
             if (resultado == true) {
                 throw new NoDataException("No se realizo la insercion");
@@ -83,9 +83,9 @@ public class ServiceUser extends Service {
         CallableStatement pstmt = null;
         try {
             pstmt = conexion.prepareCall(LISTUSER);
-            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);	
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
             boolean a = pstmt.execute();
-            rs = (ResultSet)pstmt.getObject(1);
+            rs = (ResultSet) pstmt.getObject(1);
             while (rs.next()) {
                 user = new User(
                         rs.getInt(1),
@@ -96,8 +96,8 @@ public class ServiceUser extends Service {
                         rs.getString(6),
                         rs.getString(7),
                         rs.getString(8),
-                        rs.getInt(9),
-                        rs.getInt(10)
+                        rs.getString(9),
+                        rs.getString(10)
                 );
                 coleccion.add(user);
             }
@@ -122,9 +122,9 @@ public class ServiceUser extends Service {
         }
         return coleccion;
     }
-    
+
     public void deleteUser(User user) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -154,9 +154,9 @@ public class ServiceUser extends Service {
             }
         }
     }
-   
+
     public void updateUser(User user) throws GlobalException, NoDataException, SQLException {
-            try {
+        try {
             conectar();
         } catch (ClassNotFoundException e) {
             throw new GlobalException("No se ha localizado el driver");
@@ -167,7 +167,7 @@ public class ServiceUser extends Service {
         ResultSet rs = null;
         try {
             pstmt = conexion.prepareCall(UPDATEUSER);
-            
+
             pstmt.setInt(1, user.getUser_id());
             pstmt.setString(2, user.getUser_name());
             pstmt.setString(3, user.getUser_password());
@@ -176,9 +176,9 @@ public class ServiceUser extends Service {
             pstmt.setString(6, user.getUser_email());
             pstmt.setString(7, user.getUser_birthday());
             pstmt.setString(8, user.getUser_address());
-            pstmt.setInt(9, user.getUser_workphone());
-            pstmt.setInt(10, user.getUser_personalphone()); 
-            
+            pstmt.setString(9, user.getUser_workphone());
+            pstmt.setString(10, user.getUser_personalphone());
+
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -197,6 +197,56 @@ public class ServiceUser extends Service {
             }
         }
     }
-        
-    
+
+    public User loginUser(User user) throws GlobalException, NoDataException {
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        ResultSet rs = null;
+        CallableStatement pstmt = null;
+        try {
+            pstmt = conexion.prepareCall(LOGINUSER);
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+            pstmt.setString(2, user.getUser_email());
+            pstmt.setString(3, user.getUser_password());
+            boolean a = pstmt.execute();
+            rs = (ResultSet) pstmt.getObject(1);
+            while (rs.next()) {
+                user = new User(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Sentencia no valida");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        return user;
+
+    }
+
 }

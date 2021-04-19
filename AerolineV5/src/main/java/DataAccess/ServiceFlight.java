@@ -16,10 +16,12 @@ import java.util.ArrayList;
  * @author anton
  */
 public class ServiceFlight extends Service {
+
     private static final String INSERTFLIGHT = "{call lab01_proc_ins_flight(?,?,?,?,?,?)}";
     private static final String LISTFLIGHT = "{?=call lab01_fun_list_flights()}";
     private static final String DELETEFLIGHT = "{call lab01_proc_del_flight(?)}";
     private static final String UPDATEFLIGHT = "{call lab01_proc_upd_flight(?,?,?,?,?,?)}";
+    private static final String GETFLIGHTS = "{?=call lab01_fun_get_flights(?,?,?)}";
 
     public void insertFlight(Flight flight) throws GlobalException, NoDataException {
         try {
@@ -33,16 +35,16 @@ public class ServiceFlight extends Service {
 
         try {
             pstmt = conexion.prepareCall(INSERTFLIGHT);
-
+            
             pstmt.setInt(1, flight.getFlight_id());
-            pstmt.setInt(2, flight.getFlight_plane());
+            pstmt.setInt(2, flight.getFlight_plane_id());
             pstmt.setString(3, flight.getFlight_from());
             pstmt.setString(4, flight.getFlight_to());
-            pstmt.setString(5, flight.getFlight_time());
+            pstmt.setString(5, flight.getFlight_time().replace("-", ""));
             pstmt.setInt(6, flight.getFlight_price());
 
             boolean resultado = pstmt.execute();
-            
+
             if (resultado == true) {
                 throw new NoDataException("No se realizo la insercion");
             }
@@ -82,7 +84,7 @@ public class ServiceFlight extends Service {
             rs = (ResultSet) pstmt.getObject(1);
             while (rs.next()) {
                 rs.getInt(2);
-                flight = new Flight(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5),
+                flight = new Flight(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5).replace(":00.0", ""),
                         rs.getInt(6));
                 coleccion.add(flight);
             }
@@ -155,10 +157,10 @@ public class ServiceFlight extends Service {
             pstmt = conexion.prepareCall(UPDATEFLIGHT);
 
             pstmt.setInt(1, flight.getFlight_id());
-            pstmt.setInt(2, flight.getFlight_plane());
+            pstmt.setInt(2, flight.getFlight_plane_id());
             pstmt.setString(3, flight.getFlight_from());
             pstmt.setString(4, flight.getFlight_to());
-            pstmt.setString(5, flight.getFlight_time());
+            pstmt.setString(5, flight.getFlight_time().replace("-", ""));
             pstmt.setInt(6, flight.getFlight_price());
 
             pstmt.execute();
@@ -178,6 +180,57 @@ public class ServiceFlight extends Service {
                 throw new GlobalException("Estatutos invalidos o nulos");
             }
         }
+    }
+
+    public ArrayList<Flight> getFlights(String src, String dest, String departure) throws GlobalException, NoDataException, SQLException {
+        src =  "%"+ src + "%";
+        dest =  "%"+ dest + "%";
+        
+        try {
+            conectar();
+        } catch (ClassNotFoundException e) {
+            throw new GlobalException("No se ha localizado el driver");
+        } catch (SQLException e) {
+            throw new NoDataException("La base de datos no se encuentra disponible");
+        }
+        ResultSet rs = null;
+        Flight flight = null;
+        ArrayList<Flight> coleccion = new ArrayList();
+        CallableStatement pstmt = null;
+        try {
+            pstmt = conexion.prepareCall(GETFLIGHTS);
+            pstmt.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+            pstmt.setString(2, src);
+            pstmt.setString(3, dest);
+            pstmt.setString(4, departure);
+            boolean a = pstmt.execute();
+            rs = (ResultSet) pstmt.getObject(1);
+            while (rs.next()) {
+                rs.getInt(2);
+                flight = new Flight(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5),
+                        rs.getInt(6));
+                coleccion.add(flight);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new GlobalException("Sentencia no valida");
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                desconectar();
+            } catch (SQLException e) {
+                throw new GlobalException("Estatutos invalidos o nulos");
+            }
+        }
+        if (coleccion == null) {
+            throw new NoDataException("No hay datos");
+        }
+        return coleccion;
     }
 
 }

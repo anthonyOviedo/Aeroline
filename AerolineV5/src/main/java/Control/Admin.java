@@ -8,9 +8,11 @@ package Control;
 import DataAccess.GlobalException;
 import DataAccess.NoDataException;
 import DataAccess.ServiceFlight;
+import DataAccess.ServiceLocation;
 import DataAccess.ServicePlane;
 import Logic.Flight;
 import Logic.Plane;
+import Logic.Location;
 import aerolinea.Aerolinea;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +38,9 @@ public class Admin {
         String action = (String) result.get("action");
         Object obj = null;
         switch (action) {
+            case "listLocations":
+                return listLocations();
+
             case "listPlanes":
                 return listPlanes();
 
@@ -68,10 +73,15 @@ public class Admin {
             case "searchPlanesById":
                 obj = result.get("object");
                 return searchPlanesByID(obj.toString());
-            
+
             case "searchPlanesByName":
                 obj = result.get("object");
                 return searchPlanesByName(obj.toString());
+            case "getFlights":
+                obj =  result.get("object");
+                ArrayList<String> param = (ArrayList)obj;
+                return getFlights(param.get(0),param.get(1),param.get(2));
+
         }
         return "transaccion fallida";
     }
@@ -97,7 +107,7 @@ public class Admin {
 
         return jsonString;
     }
- 
+
     private String searchPlanesByName(String token) throws SQLException, JsonProcessingException {
         ServicePlane servicePlane = new ServicePlane();
         ArrayList<Plane> planes = new ArrayList<Plane>();
@@ -213,6 +223,41 @@ public class Admin {
         Flight flight = gson.fromJson(jsonFlight, Flight.class);
         serviceFlight.updateFlight(flight);
         return "Avion actualizado";
+    }
+
+    private String listLocations() throws JsonProcessingException, SQLException {
+        ServiceLocation serviceLocation = new ServiceLocation();
+        ArrayList<Location> locations = new ArrayList<Location>();
+        try {
+            locations = serviceLocation.listLocations();
+        } catch (GlobalException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoDataException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        // Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(locations);
+        return jsonString;
+    }
+
+    private String getFlights(String src,String dest, String date) throws SQLException, JsonProcessingException {
+        ServiceFlight serviceFlight = new ServiceFlight();
+        ArrayList<Flight> flight = new ArrayList<Flight>();
+        
+        try {
+            flight = serviceFlight.getFlights(src,dest,date);
+        } catch (GlobalException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoDataException ex) {
+            Logger.getLogger(Aerolinea.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        // Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(flight);
+        return jsonString;
     }
 
 }

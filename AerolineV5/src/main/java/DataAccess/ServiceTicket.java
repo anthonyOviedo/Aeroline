@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * @author anton
  */
 public class ServiceTicket extends Service {
-    private static final String INSERTTICKET = "{call lab01_proc_ins_ticket(?,?,?)}";
+    private static final String INSERTTICKET = "{call lab01_proc_ins_ticket(?,?,?,?,?,?,?)}";
     private static final String LISTTICKET = "{?=call lab01_fun_list_tickets()}";
     private static final String DELETETICKET = "{call lab01_proc_del_ticket(?)}";
     private static final String UPDATETICKET = "{call lab01_proc_del_ticket(?,?,?)}";
@@ -37,11 +37,12 @@ public class ServiceTicket extends Service {
             pstmt = conexion.prepareCall(INSERTTICKET);
 
             pstmt.setInt(1, ticket.getTicket_id());
-            pstmt.setInt(2, ticket.getTicket_flight());
-            pstmt.setInt(3, ticket.getTicket_user());
-            pstmt.setString(4, ticket.getTicket_duration_time());
-            pstmt.setInt(5, ticket.getTicket_price());
-            pstmt.setString(6, ticket.getTicket_seat());
+            pstmt.setInt(2, ticket.getTicket_flight_code());
+            pstmt.setInt(3, ticket.getTicket_user_id());
+            pstmt.setInt(4, ticket.getTicket_flight_back_code());
+            pstmt.setString(5, ticket.getTicket_duration_time());
+            pstmt.setInt(6, ticket.getTicket_price());
+            pstmt.setString(7, ticket.getTicket_seat());
 
             boolean resultado = pstmt.execute();
             if (resultado == true) {
@@ -82,8 +83,7 @@ public class ServiceTicket extends Service {
             rs = (ResultSet) pstmt.getObject(1);
 
             while (rs.next()) {
-                Ticket ticket = new Ticket(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getInt(5),
-                        rs.getString(6));
+                Ticket ticket = new Ticket(rs.getInt(1), rs.getInt(2), rs.getInt(3),rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7));
                 coleccion.add(ticket);
             }
 
@@ -156,8 +156,8 @@ public class ServiceTicket extends Service {
             pstmt = conexion.prepareCall(UPDATETICKET);
 
             pstmt.setInt(1, ticket.getTicket_id());
-            pstmt.setInt(2, ticket.getTicket_flight());
-            pstmt.setInt(3, ticket.getTicket_user());
+            pstmt.setInt(2, ticket.getTicket_flight_code());
+            pstmt.setInt(3, ticket.getTicket_user_id());
             pstmt.setString(4, ticket.getTicket_duration_time());
             pstmt.setInt(5, ticket.getTicket_price());
             pstmt.setString(6, ticket.getTicket_seat());
